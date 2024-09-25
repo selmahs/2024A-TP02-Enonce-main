@@ -5,14 +5,12 @@ Groupe de laboratoire : XX
 Numéro d'équipe :  YY
 Noms et matricules : Nom1 (Matricule1), Nom2 (Matricule2)
 """
-
+#test
 ########################################################################################################## 
 # PARTIE 1 : Création du système de gestion et ajout de la collection actuelle
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
-
-
 
 
 
