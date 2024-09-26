@@ -11,9 +11,19 @@ Noms et matricules : Nom1 (Matricule1), Nom2 (Matricule2)
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
+import csv 
+bibliotheque={}
+csvfile= open('collection_bibliotheque.csv', newline='') 
+c= csv.DictReader(csvfile)
+for row in c:
+    cote_rangement = row["cote_rangement"]
+    bibliotheque[cote_rangement] = {
+        "Titre:" : row["titre"],
+        "Auteur:" : row["auteur"],
+        "date_de_publication:" : row["date_publication"],
+    }
 
-
-
+print(f' \n Bibliotheque initiale : {bibliotheque} \n')
 
 ########################################################################################################## 
 # PARTIE 2 : Ajout d'une nouvelle collection à la bibliothèque
