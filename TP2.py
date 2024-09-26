@@ -32,8 +32,19 @@ print(f' \n Bibliotheque initiale : {bibliotheque} \n')
 # TODO : Écrire votre code ici
 
 
-
-
+csvfile= open('nouvelle_collection.csv', newline='') 
+c= csv.DictReader(csvfile)
+for row in c:
+    cote_rangement = row["cote_rangement"]
+    if cote_rangement not in bibliotheque:
+        bibliotheque[cote_rangement] = {
+            "Titre:" : row["titre"],
+            "Auteur:" : row["auteur"],
+            "date_de_publication:" : row["date_publication"],
+        }
+        print (f"Le livre {cote_rangement} ---- {row["titre"]} par {row["auteur"]} ---- a été ajouté avec succès")
+    else:
+        print(f"Le livre {cote_rangement} ---- {row["titre"]} par {row["auteur"]} ---- est déjà présent dans la bibliothèque")
 
 
 ########################################################################################################## 
