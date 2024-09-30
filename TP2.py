@@ -53,8 +53,25 @@ for row in c:
 
 # TODO : Écrire votre code ici
 
+#csvfile= open('nouvelle_collection.csv', newline='') 
+#c= csv.DictReader(csvfile)
+#for row in c:
+ #    cote_rangement = row['cote_rangement']
+  #   if row['auteur'] == "William Shakespeare":
+   #      nouvelle_cote = "WS" + cote_rangement[1:]
+    #     valeur = bibliotheque.pop(cote_rangement)
+     #    bibliotheque[nouvelle_cote] = valeur
+#print(f' \n Bibliotheque avec modifications de cote : {bibliotheque} \n')
+coteModif =[]
+for cote_rangement, details in list(bibliotheque.items()):
+   if 'auteur' in details and details['auteur'] == "William Shakespeare" :
+        nouvelleCote = "WS" + cote_rangement[1:]
+        coteModif.append((cote_rangement,nouvelleCote, details))
+for ancienneCote, nouvelleCote, info in coteModif:
+    bibliotheque[nouvelleCote] = info 
+    del bibliotheque[ancienneCote]
 
-
+print(f'\nBibliothèque avec modifications de cote : {bibliotheque}\n')
 
 
 
@@ -65,8 +82,17 @@ for row in c:
 
 # TODO : Écrire votre code ici
 
-
-
+for cote_rangement, info_livre in bibliotheque.items():
+    info_livre['emprunts']= "disponible"
+csvfile= open('emprunts.csv', newline='') 
+c= csv.DictReader(csvfile)
+for row in c:
+    cote_rangement = row['cote_rangement']
+    if cote_rangement in bibliotheque:
+        bibliotheque[cote_rangement]['emprunts']= "emprunte"
+        bibliotheque[cote_rangement]['date_emprunt']= row['date_emprunt']
+       
+print(f' \n Bibliotheque avec ajout des emprunts : {bibliotheque} \n')
 
 
 
@@ -76,9 +102,25 @@ for row in c:
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
+from datetime import datetime,date
+frais=0
 
+csvfile= open('emprunts.csv', newline='') 
+c= csv.DictReader(csvfile)
+for row in c:
+    cote_rangement = row["cote_rangement"]
+    dateEmprunt = date(int(row['date_emprunt'][:4]), int(row['date_emprunt'][5:7]),int(row['date_emprunt'][8:10]))
+    today= date.today()
+    diffTemps= today - dateEmprunt
+    diffJour= diffTemps.days
+    if cote_rangement in bibliotheque and diffJour>30:
+        frais= (diffJour-30)*2
+        if frais<= 100:
+            bibliotheque[cote_rangement]['frais_retars']= frais
+        if frais>100:
+            bibliotheque[cote_rangement]['frais_retars']= frais
+        if diffJour> 365:
+            bibliotheque[cote_rangement]['livre_perdus']= "perdus"
 
-
-
-
+print(f' \n Bibliotheque avec ajout des retards et frais : {bibliotheque} \n')
 
