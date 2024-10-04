@@ -82,10 +82,12 @@ print(f'\nBibliothèque avec modifications de cote : {bibliotheque}\n')
 
 # TODO : Écrire votre code ici
 
-for cote_rangement, info_livre in bibliotheque.items():
-    info_livre['emprunts']= "disponible"
 csvfile= open('emprunts.csv', newline='') 
 c= csv.DictReader(csvfile)
+
+for cote_rangement, info_livre in bibliotheque.items():
+    info_livre['emprunts']= "disponible"
+
 for row in c:
     cote_rangement = row['cote_rangement']
     if cote_rangement in bibliotheque:
@@ -94,19 +96,14 @@ for row in c:
        
 print(f' \n Bibliotheque avec ajout des emprunts : {bibliotheque} \n')
 
-
-
-
 ########################################################################################################## 
 # PARTIE 5 : Livres en retard 
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
 from datetime import datetime,date
-frais=0
+frais = 0
 
-csvfile= open('emprunts.csv', newline='') 
-c= csv.DictReader(csvfile)
 for row in c:
     cote_rangement = row["cote_rangement"]
     dateEmprunt = date(int(row['date_emprunt'][:4]), int(row['date_emprunt'][5:7]),int(row['date_emprunt'][8:10]))
