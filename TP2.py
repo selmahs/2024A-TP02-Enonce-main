@@ -52,24 +52,16 @@ for row in c:
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
+csvfile= open('nouvelle_collection.csv', newline='') 
+c= csv.DictReader(csvfile)
+for row in c:
+    auteur = row['auteur']
+    cote_rangement = row['cote_rangement']
+    if auteur == "William Shakespeare" and cote_rangement in bibliotheque:
+        if cote_rangement.startswith("S"):
+            nouvelleCoteRangement = "WS" + cote_rangement[1:]
+            bibliotheque[nouvelleCoteRangement] = bibliotheque.pop(cote_rangement)
 
-#csvfile= open('nouvelle_collection.csv', newline='') 
-#c= csv.DictReader(csvfile)
-#for row in c:
- #    cote_rangement = row['cote_rangement']
-  #   if row['auteur'] == "William Shakespeare":
-   #      nouvelle_cote = "WS" + cote_rangement[1:]
-    #     valeur = bibliotheque.pop(cote_rangement)
-     #    bibliotheque[nouvelle_cote] = valeur
-#print(f' \n Bibliotheque avec modifications de cote : {bibliotheque} \n')
-coteModif =[]
-for cote_rangement, details in list(bibliotheque.items()):
-   if 'auteur' in details and details['auteur'] == "William Shakespeare" :
-        nouvelleCote = "WS" + cote_rangement[1:]
-        coteModif.append((cote_rangement,nouvelleCote, details))
-for ancienneCote, nouvelleCote, info in coteModif:
-    bibliotheque[nouvelleCote] = info 
-    del bibliotheque[ancienneCote]
 
 print(f'\nBibliothèque avec modifications de cote : {bibliotheque}\n')
 
@@ -94,30 +86,31 @@ for row in c:
         bibliotheque[cote_rangement]['emprunts']= "emprunte"
         bibliotheque[cote_rangement]['date_emprunt']= row['date_emprunt']
        
-print(f' \n Bibliotheque avec ajout des emprunts : {bibliotheque} \n')
+print(f"\n Bibliotheque avec ajout des emprunts : {bibliotheque} \n")
 
 ########################################################################################################## 
 # PARTIE 5 : Livres en retard 
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
-from datetime import datetime,date
-frais = 0
 
-for row in c:
-    cote_rangement = row["cote_rangement"]
-    dateEmprunt = date(int(row['date_emprunt'][:4]), int(row['date_emprunt'][5:7]),int(row['date_emprunt'][8:10]))
-    today= date.today()
-    diffTemps= today - dateEmprunt
-    diffJour= diffTemps.days
-    if cote_rangement in bibliotheque and diffJour>30:
-        frais= (diffJour-30)*2
-        if frais<= 100:
-            bibliotheque[cote_rangement]['frais_retars']= frais
-        if frais>100:
-            bibliotheque[cote_rangement]['frais_retars']= frais
-        if diffJour> 365:
-            bibliotheque[cote_rangement]['livre_perdus']= "perdus"
+import datetime
+csvfile= open('emprunts.csv', newline='') 
+c= csv.DictReader(csvfile)
 
-print(f' \n Bibliotheque avec ajout des retards et frais : {bibliotheque} \n')
+cote_rangement = row['cote_rangement']
+
+for cote_rangement, detail in bibliotheque.items():
+    if detail["emprunts"] == "emprunte":
+        dateEmprunt = datetime.datetime.strptime(detail["date_emprunt"], "%Y-%m-%d")
+        dateToday= datetime.datetime.now()
+        dateDiff = (dateToday - dateEmprunt).days
+        retard = dateDiff-30
+        if dateDiff >30:
+            frais = min(retard*2, 100)
+            detail["frais_retard"]= frais
+        if dateDiff>365:
+            detail["livre_perdu"]= True
+   
+print(f"\n Bibliotheque avec ajout des retards et frais : {bibliotheque} \n")
 
