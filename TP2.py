@@ -1,9 +1,9 @@
 """
 TP2 : Système de gestion de livres pour une bibliothèque
 
-Groupe de laboratoire : XX
-Numéro d'équipe :  YY
-Noms et matricules : Nom1 (Matricule1), Nom2 (Matricule2)
+Groupe de laboratoire : 01
+Numéro d'équipe :  L0-16
+Noms et matricules : Selma Hseine (2376641), Aya Benkhay (2395247)
 """
 
 ########################################################################################################## 
@@ -92,7 +92,7 @@ import datetime
 dateToday = datetime.datetime.now()
 
 for cote_rangement, detail in bibliotheque.items():
-    
+
     if detail["emprunts"] == "emprunte":
 
         dateEmprunt = datetime.datetime.strptime(detail["date_emprunt"], "%Y-%m-%d")  
