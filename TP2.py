@@ -23,7 +23,7 @@ for row in c:
         "date_de_publication:" : row["date_publication"],
     }
 
-print(f' \n Bibliotheque initiale : {bibliotheque} \n')
+#print(f' \n Bibliotheque initiale : {bibliotheque} \n')
 
 ########################################################################################################## 
 # PARTIE 2 : Ajout d'une nouvelle collection à la bibliothèque
@@ -33,8 +33,8 @@ print(f' \n Bibliotheque initiale : {bibliotheque} \n')
 
 
 csvfile= open('nouvelle_collection.csv', newline='') 
-c= csv.DictReader(csvfile)
-for row in c:
+v= csv.DictReader(csvfile)
+for row in v:
     cote_rangement = row["cote_rangement"]
     if cote_rangement not in bibliotheque:
         bibliotheque[cote_rangement] = {
@@ -52,21 +52,19 @@ for row in c:
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
-csvfile= open('nouvelle_collection.csv', newline='') 
-c= csv.DictReader(csvfile)
-for row in c:
-    auteur = row['auteur']
-    cote_rangement = row['cote_rangement']
-    if auteur == "William Shakespeare" and cote_rangement in bibliotheque:
-        if cote_rangement.startswith("S"):
-            nouvelleCoteRangement = "WS" + cote_rangement[1:]
-            bibliotheque[nouvelleCoteRangement] = bibliotheque.pop(cote_rangement)
+modif = {}
+for coteRangement, details in bibliotheque.items():
 
+    for coteRangement, details in bibliotheque.items():
+        if "auteur" in details.keys() and details["auteur"] == "William Shakespeare" and coteRangement.startswith("S"):
+            newCote = "WS" + coteRangement[1:]
+            modif[coteRangement] = newCote
+
+    for ancienneCote, newCote in modif.items():
+        if ancienneCote in bibliotheque:
+            bibliotheque[ancienneCote] = bibliotheque.pop(coteRangement[0])
 
 print(f'\nBibliothèque avec modifications de cote : {bibliotheque}\n')
-
-
-
 
 ########################################################################################################## 
 # PARTIE 4 : Emprunts et retours de livres
@@ -88,29 +86,36 @@ for row in c:
        
 print(f"\n Bibliotheque avec ajout des emprunts : {bibliotheque} \n")
 
+
 ########################################################################################################## 
 # PARTIE 5 : Livres en retard 
 ########################################################################################################## 
+from datetime import datetime
 
-# TODO : Écrire votre code ici
+from datetime import timedelta
 
-import datetime
-csvfile= open('emprunts.csv', newline='') 
-c= csv.DictReader(csvfile)
+frais_retard_jour=2
+frais_maximal=100
+date_today=datetime.now()
+delai_de_retour=timedelta (days=30)
+livre_perdu=[]
 
-cote_rangement = row['cote_rangement']
+for cote, informations in bibliotheque.items():
+  if informations["emprunté"]=="emprunt":
+    date_emprunt=datetime.strptime(informations["date_emprunt"], "%Y-%m-$d")
+    late_days=(date_today-date_emprunt).days-delai_de_retour.jours
 
-for cote_rangement, detail in bibliotheque.items():
-    if detail["emprunts"] == "emprunte":
-        dateEmprunt = datetime.datetime.strptime(detail["date_emprunt"], "%Y-%m-%d")
-        dateToday= datetime.datetime.now()
-        dateDiff = (dateToday - dateEmprunt).days
-        retard = dateDiff-30
-        if dateDiff >30:
-            frais = min(retard*2, 100)
-            detail["frais_retard"]= frais
-        if dateDiff>365:
-            detail["livre_perdu"]= True
-   
-print(f"\n Bibliotheque avec ajout des retards et frais : {bibliotheque} \n")
+    if late_days>0:
+      frais_retard_jour=str(min(late_days*frais_retard_jour,frais_maximal))+"$"
+      bibliotheque[cote]["frais_retard"]=frais_retard_jour
+    if late_days>365:
+      livre_perdu.append(cote)
+      bibliotheque[cote]["livre_perdu"]="Oui"
+    if late_days<=365:
+      livre_perdu.append(cote)
+      bibliotheque[cote]["livre_perdu"]="Non"
+    else:
+      bibliotheque[cote]["livre_perdu"]="Non"
 
+
+print(f"\nBibliotheque avec ajout des retards et frais: {bibliotheque} \n")
