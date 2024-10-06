@@ -23,7 +23,7 @@ for row in c:
         "date_publication" : row["date_publication"],
     }
 
-#print(f' \n Bibliotheque initiale : {bibliotheque} \n')
+print(f' \n Bibliotheque initiale : {bibliotheque} \n')
 
 ########################################################################################################## 
 # PARTIE 2 : Ajout d'une nouvelle collection à la bibliothèque
@@ -89,16 +89,19 @@ for row in c:
 ########################################################################################################## 
 import datetime
 
-dateActuelle = datetime.datetime.now()
+dateToday = datetime.datetime.now()
 
 for cote_rangement, detail in bibliotheque.items():
-    if details["emprunts"] == "emprunte":
-        date_emprunt = datetime.datetime.strptime(detail["date_emprunt"], "%Y -%m-%d")
-        dateDiff = (dateActuelle-date_emprunt).days
+    
+    if detail["emprunts"] == "emprunte":
+
+        dateEmprunt = datetime.datetime.strptime(detail["date_emprunt"], "%Y-%m-%d")  
+        dateDiff = (dateToday-dateEmprunt).days
+
         if dateDiff>30:
             frais= min((dateDiff-30)*2,100)
             detail["frais_retard"] = frais
-        if dateDiff>365:
-            detail["livre_perdu"]= True
 
-#print(f"\n Bibliotheque avec ajout des retards et frais : {bibliotheque} \n")
+        if dateDiff>365 : detail["livre_perdu"]= True
+
+print(f"\n Bibliotheque avec ajout des retards et frais : {bibliotheque} \n")
